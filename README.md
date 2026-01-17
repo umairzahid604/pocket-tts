@@ -23,7 +23,7 @@ Text-to-Speech with voice cloning using Kyutai's [Pocket-TTS](https://github.com
 ## Installation
 
 ```bash
-npm install pocket-tts
+npm install https://github.com/umairzahid604/pocket-tts.git
 ```
 
 Python package `pocket-tts` will be installed automatically during npm install.
