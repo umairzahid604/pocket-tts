@@ -1,0 +1,7 @@
+# Logs
+*.log
+
+# Test outputs
+*.wav
+
+# Build (we want dist in npm)
