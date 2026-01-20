@@ -230,10 +230,22 @@ export class PythonBridge {
     }
 
     /**
+     * Normalize text to handle malformed characters
+     */
+    private normalizeTTS(text: string): string {
+        return text
+            .replace(/['']/g, "'")
+            .replace(/[""]/g, '"')
+            .replace(/…/g, '...')
+            .replace(/—/g, '-');
+    }
+
+    /**
      * Generate audio
      */
     async generate(text: string, voice: string): Promise<Buffer> {
-        const response = await this.sendCommand({ cmd: 'generate', text, voice });
+        const normalizedText = this.normalizeTTS(text);
+        const response = await this.sendCommand({ cmd: 'generate', text: normalizedText, voice });
         if (response.status !== 'ok' || !response.audio) {
             throw new Error('Failed to generate audio');
         }

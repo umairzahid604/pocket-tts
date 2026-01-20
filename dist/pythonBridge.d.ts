@@ -52,6 +52,10 @@ export declare class PythonBridge {
      */
     loadVoice(voice: string): Promise<void>;
     /**
+     * Normalize text to handle malformed characters
+     */
+    private normalizeTTS;
+    /**
      * Generate audio
      */
     generate(text: string, voice: string): Promise<Buffer>;
