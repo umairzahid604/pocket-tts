@@ -1,6 +1,6 @@
 {
   "name": "pocket-tts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Text-to-Speech with voice cloning using Kyutai's Pocket-TTS model. Supports volume and playback speed control via FFmpeg.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
