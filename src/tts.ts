@@ -22,22 +22,26 @@ import {
  */
 function normalizeText(text: string): string {
     return text
-        // Smart quotes to regular
-        .replace(/[''`]/g, "'")
-        .replace(/[""„]/g, '"')
-        // Dashes and hyphens
-        .replace(/[—–−]/g, '-')
+        // Smart/curly quotes and apostrophes - comprehensive Unicode coverage
+        .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035`']/g, "'")  // All single quotes/apostrophes
+        .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036""„]/g, '"') // All double quotes
+        // Dashes, hyphens, minus signs
+        .replace(/[\u2014\u2013\u2012\u2011\u2010\u2212—–−‐‑‒]/g, '-')
         // Ellipsis
-        .replace(/…/g, '...')
+        .replace(/[\u2026…]/g, '...')
         // Ampersand - replace with "and"
         .replace(/&/g, ' and ')
+        // Newlines to spaces (important for multiline text)
+        .replace(/[\r\n]+/g, ' ')
         // Other problematic characters
-        .replace(/[•·]/g, '-')      // Bullets
-        .replace(/[©®™]/g, '')      // Copyright/trademark
+        .replace(/[•·●○◦‣⁃]/g, '-')   // All bullet types
+        .replace(/[©®™℠]/g, '')        // Copyright/trademark
         .replace(/[°]/g, ' degrees ')
-        .replace(/[€£¥₹]/g, '$')    // Currency symbols
-        .replace(/[×]/g, 'x')       // Multiplication
-        .replace(/[÷]/g, '/')       // Division
+        .replace(/[€£¥₹₽₿¢]/g, '$')    // Currency symbols
+        .replace(/[×✕✖]/g, 'x')        // Multiplication/cross marks
+        .replace(/[÷]/g, '/')           // Division
+        .replace(/[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞]/g, '') // Fractions - remove
+        .replace(/[←→↑↓↔↕]/g, '')      // Arrows - remove
         // Clean up extra spaces
         .replace(/\s+/g, ' ')
         .trim();
