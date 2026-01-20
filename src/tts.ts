@@ -18,15 +18,29 @@ import {
 
 /**
  * Normalize text to ASCII-clean version for TTS
- * Converts Unicode punctuation that pocket-tts can't handle
+ * Converts Unicode punctuation and special characters that pocket-tts can't handle
  */
 function normalizeText(text: string): string {
     return text
-        .replace(/['']/g, "'")      // Smart single quotes
-        .replace(/[""]/g, '"')      // Smart double quotes  
-        .replace(/…/g, '...')       // Ellipsis
-        .replace(/—/g, '-')         // Em-dash
-        .replace(/–/g, '-');        // En-dash
+        // Smart quotes to regular
+        .replace(/[''`]/g, "'")
+        .replace(/[""„]/g, '"')
+        // Dashes and hyphens
+        .replace(/[—–−]/g, '-')
+        // Ellipsis
+        .replace(/…/g, '...')
+        // Ampersand - replace with "and"
+        .replace(/&/g, ' and ')
+        // Other problematic characters
+        .replace(/[•·]/g, '-')      // Bullets
+        .replace(/[©®™]/g, '')      // Copyright/trademark
+        .replace(/[°]/g, ' degrees ')
+        .replace(/[€£¥₹]/g, '$')    // Currency symbols
+        .replace(/[×]/g, 'x')       // Multiplication
+        .replace(/[÷]/g, '/')       // Division
+        // Clean up extra spaces
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 export class PocketTTS {
