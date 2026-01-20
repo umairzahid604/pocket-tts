@@ -99,6 +99,13 @@ class TTSBridge:
     
     def generate(self, text, voice="alba"):
         """Generate audio from text"""
+        # Validate text is a string
+        if not isinstance(text, str):
+            raise Exception(f"Text must be a string, got {type(text).__name__}")
+        
+        if not text or not text.strip():
+            raise Exception("Text cannot be empty")
+        
         if self.model is None:
             self.init_model()
         
@@ -108,17 +115,20 @@ class TTSBridge:
         
         voice_state = self.voice_cache[voice]
         
-        # Generate audio
-        audio = self.model.generate_audio(voice_state, text)
-        
-        # Convert to WAV bytes
-        import scipy.io.wavfile
-        buffer = io.BytesIO()
-        scipy.io.wavfile.write(buffer, self.sample_rate, audio.numpy())
-        buffer.seek(0)
-        
-        # Return as base64
-        return base64.b64encode(buffer.read()).decode('utf-8')
+        try:
+            # Generate audio
+            audio = self.model.generate_audio(voice_state, text)
+            
+            # Convert to WAV bytes
+            import scipy.io.wavfile
+            buffer = io.BytesIO()
+            scipy.io.wavfile.write(buffer, self.sample_rate, audio.numpy())
+            buffer.seek(0)
+            
+            # Return as base64
+            return base64.b64encode(buffer.read()).decode('utf-8')
+        except Exception as e:
+            raise Exception(f"Audio generation failed: {str(e)}")
     
     def list_voices(self):
         """List available predefined voices"""
