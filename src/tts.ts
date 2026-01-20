@@ -16,6 +16,19 @@ import {
     PREDEFINED_VOICES
 } from './types';
 
+/**
+ * Normalize text to ASCII-clean version for TTS
+ * Converts Unicode punctuation that pocket-tts can't handle
+ */
+function normalizeText(text: string): string {
+    return text
+        .replace(/['']/g, "'")      // Smart single quotes
+        .replace(/[""]/g, '"')      // Smart double quotes  
+        .replace(/…/g, '...')       // Ellipsis
+        .replace(/—/g, '-')         // Em-dash
+        .replace(/–/g, '-');        // En-dash
+}
+
 export class PocketTTS {
     private bridge: PythonBridge;
     private initialized = false;
@@ -248,8 +261,11 @@ print(json.dumps(result))
             throw error;
         }
 
+        // Normalize text to ASCII-clean version
+        const normalizedText = normalizeText(text);
+
         // Generate audio via Python bridge
-        let audioBuffer = await this.bridge.generate(text, voice);
+        let audioBuffer = await this.bridge.generate(normalizedText, voice);
 
         // Apply audio processing if needed
         if (volume !== 1.0 || playbackSpeed !== 1.0) {
