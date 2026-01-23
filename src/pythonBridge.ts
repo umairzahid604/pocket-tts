@@ -117,8 +117,8 @@ export class PythonBridge {
     private async waitForReady(): Promise<void> {
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
-                reject(new Error('Python bridge startup timeout'));
-            }, 30000);
+                reject(new Error('Python bridge startup timeout - this may happen if the TTS model is downloading. Please try again.'));
+            }, 60000); // 60 seconds timeout for first-time setup
 
             const checkReady = (line: string) => {
                 if (line.includes('"status":"ready"') || line.includes('"status": "ready"')) {
